@@ -1,0 +1,7 @@
+<table class="table" border="5">
+    <tr *ngFor="let row of boardArray; let i=index">
+        <td class="item" *ngFor="let item of row; let j=index">
+           <app-cell [cell]="item"></app-cell>
+        </td>
+    </tr>
+</table>
