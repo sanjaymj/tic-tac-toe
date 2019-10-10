@@ -9,18 +9,18 @@ export class FireStoreService {
     public boardItemsCollection: AngularFirestoreCollection<Cell>;
     public boardItems$: Observable<Cell[]>;
     public boardItemDoc: AngularFirestoreDocument<Cell>;
-    private static DOCUMENT_NAME = 'Board2';
+    private static DOCUMENT_NAME_BOARD = 'TTBoard';
 
     public playerTurnCollection: AngularFirestoreCollection<NextPlayer>;
     public playerTurnItems$: Observable<NextPlayer[]>;
     public playerTurnDoc: AngularFirestoreDocument<NextPlayer>;
-    private static DOCUMENT_NAME1 = 'nextPlayer';
+    private static DOCUMENT_NAME_NEXT_PLAYER = 'nextPlayer';
     
     public dbState$$:BehaviorSubject<DBState> = new BehaviorSubject<DBState>(DBState.DEFAULT);
     public dbState$ = this.dbState$$.asObservable();
 
     constructor(public afs: AngularFirestore) { 
-        this.boardItemsCollection = this.afs.collection(FireStoreService.DOCUMENT_NAME);
+        this.boardItemsCollection = this.afs.collection(FireStoreService.DOCUMENT_NAME_BOARD);
         this.notifyDatabaseState();
             this.boardItems$ = this.boardItemsCollection.snapshotChanges().pipe(map(changes => {
                 this.notifyDatabaseState();
@@ -31,7 +31,7 @@ export class FireStoreService {
                 });
             }));
 
-            this.playerTurnCollection = this.afs.collection(FireStoreService.DOCUMENT_NAME1);
+            this.playerTurnCollection = this.afs.collection(FireStoreService.DOCUMENT_NAME_NEXT_PLAYER);
             this.playerTurnItems$ = this.playerTurnCollection.snapshotChanges().pipe(map(changes => {
                 return changes.map(a => {
                     const data = a.payload.doc.data() as NextPlayer;
@@ -66,14 +66,14 @@ export class FireStoreService {
 
 
     public updateBoardItems(cell: Cell, curPlayer: Player) {
-        this.boardItemDoc = this.afs.doc(`Board2/${cell.id}`);
+        this.boardItemDoc = this.afs.doc(FireStoreService.DOCUMENT_NAME_BOARD + '/' + cell.id);
         cell.occupiedBy =  curPlayer;
         this.boardItemDoc.update({...cell});
         this.boardItemsCollection.doc(cell.id).update(cell);
     } 
 
     public updateNextPlayerInfo(player: NextPlayer) {
-        this.playerTurnDoc = this.afs.doc(`nextPlayer/${player.id}`); 
+        this.playerTurnDoc = this.afs.doc(FireStoreService.DOCUMENT_NAME_NEXT_PLAYER + '/' + player.id); 
         this.playerTurnDoc.update({...player});
     }
 
@@ -84,13 +84,12 @@ export class FireStoreService {
                 this.delete(item);
             }
         }
-        //window.location.reload();
     }
 
     public delete(cell: Cell) {
         console.log('FireStoreService: delete()');
         if (cell) {
-            this.boardItemDoc = this.afs.doc(`Board2/${cell.id}`);
+            this.boardItemDoc = this.afs.doc(FireStoreService.DOCUMENT_NAME_BOARD + '/' + cell.id);
             this.boardItemDoc.delete();
         }
     }
