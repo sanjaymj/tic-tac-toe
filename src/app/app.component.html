@@ -1,24 +1,34 @@
 <div class="wrapper">
   <h1>MY TIC TAC TOE</h1>
   <app-home-screen></app-home-screen>
-  <div [ngSwitch]="gameService.gameState$|async">
-      <div *ngSwitchCase="gameState.DORMANT">
-          <button class="button" name="buttonStart" (click)="startGame()">Start Game</button>
-      </div>
-      <div *ngSwitchCase="gameState.PLAYER_ONE_WINS">
-          <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
-          <p class="result">Player One is the winner!!</p>
-      </div>
-      <div *ngSwitchCase="gameState.PLAYER_TWO_WINS">
-          <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
-          <p class="result">Player TWO is the winner!!</p>
-      </div>
-      <div *ngSwitchCase="gameState.DRAW">
-          <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
-          <p class="result">Draw match!!</p>
-      </div>
-      <div *ngSwitchCase="gameState.PLAYING">
-          <button class="button" name="buttonStop" (click)="stopGame()">Stop Game</button>
-      </div>
-  </div>
+  <ng-container *ngIf="{
+    state: gameService.gameState$|async,
+    player: gameService.playerTurn$|async} as data">
+    <div [ngSwitch]="data.state">
+        <div *ngSwitchCase="gameState.DORMANT">
+            <button class="button" name="buttonStart" (click)="startGame()">Start Game</button>
+        </div>
+        <div *ngSwitchCase="gameState.PLAYER_ONE_WINS">
+            <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
+            <p class="result">Player One is the winner!!</p>
+        </div>
+        <div *ngSwitchCase="gameState.PLAYER_TWO_WINS">
+            <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
+            <p class="result">Player TWO is the winner!!</p>
+        </div>
+        <div *ngSwitchCase="gameState.DRAW">
+            <button class="button" name="buttonRestart" (click)="stopGame()">Restart Game</button><br>
+            <p class="result">Draw match!!</p>
+        </div>
+        <div *ngSwitchCase="gameState.PLAYING">
+            <button class="button" name="buttonStop" (click)="stopGame()">Stop Game</button>
+            <div class="player-indicator" *ngIf="data.player==player.ONE">
+                <p>Player One turn</p>
+            </div>
+            <div class="player-indicator" *ngIf="data.player==player.TWO">
+                <p>Player Two turn</p>
+            </div>
+        </div>
+    </div>
+  </ng-container>
 </div>

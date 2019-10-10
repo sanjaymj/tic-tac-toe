@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameState } from './models/config';
+import { GameState, Player } from './models/config';
 import { GameService } from './services/game.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { GameService } from './services/game.service';
 export class AppComponent {
   title = 'tic-tac-toe';
   public gameState = GameState;
+  public player = Player;
 
   constructor(public gameService: GameService) {
   }

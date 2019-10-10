@@ -42,7 +42,6 @@ export class GameService {
                     this.fireStore.boardItems$.subscribe((val: Cell[]) => {
                         this.ticTacToeBoard2D = this.mapTo2DArray(val);
                         this.ticTacToeBoard$$.next(this.ticTacToeBoard2D);
-                        this.applyRules();
                     });
                 } else if(dbstate == DBState.INVALID) {
                     console.log('Database is incorrectly filled. Delete database');
@@ -77,7 +76,6 @@ export class GameService {
                 mappedRowToCell = [];
             }
         }
-        console.log('GameService:mapTo2DArray . val is ', twoDimensionArray);
         return twoDimensionArray;
     }
 
@@ -98,6 +96,7 @@ export class GameService {
                 this.ticTacToeBoard2D[i][j].playerIndication = "O";
                 this.playerTurn$$.next(Player.ONE);
             }
+            this.applyRules();
             this.ticTacToeBoard$$.next(this.ticTacToeBoard2D);
             this.fireStore.updateBoardItems(cell, curPlayer);
             this.nextPlayer.playerTurn = (curPlayer === Player.ONE) ? Player.TWO : Player.ONE;
